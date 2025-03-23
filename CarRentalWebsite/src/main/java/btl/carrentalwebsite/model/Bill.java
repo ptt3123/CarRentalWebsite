@@ -40,7 +40,7 @@ class Bill implements Serializable {
     
     @NotNull(message = "customerUserId không được Null!")
     @Min(value = 1, message = "customerUserId không hợp lệ")
-    private int customerUserId;
+    private int customerId;
     
     public Bill() {}
     
@@ -118,15 +118,15 @@ class Bill implements Serializable {
     }
 
     public int getCustomerUserId() {
-        return customerUserId;
+        return customerId;
     }
 
-    public void setCustomerUserId(int customerUserId) {
-        this.customerUserId = customerUserId;
+    public void setCustomerUserId(int customerId) {
+        this.customerId = customerId;
     }
     
     @Override
     public String toString() {
-        return "Bill{" + "id=" + id + ", detail=" + detail + ", createDate=" + createDate + ", totalPrice=" + totalPrice + ", lateFee=" + lateFee + ", repairFee=" + repairFee + ", paymentDate=" + paymentDate + ", rentalOrderId=" + rentalOrderId + ", staffId=" + staffId + ", customerUserId=" + customerUserId + '}';
+        return "Bill{" + "id=" + id + ", detail=" + detail + ", createDate=" + createDate + ", totalPrice=" + totalPrice + ", lateFee=" + lateFee + ", repairFee=" + repairFee + ", paymentDate=" + paymentDate + ", rentalOrderId=" + rentalOrderId + ", staffId=" + staffId + ", customerId=" + customerId + '}';
     }
 }

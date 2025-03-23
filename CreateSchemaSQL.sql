@@ -1,6 +1,6 @@
 use car_rental_db;
 
-CREATE TABLE user (
+CREATE TABLE `user` (
     id INT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(25) UNIQUE NOT NULL,
     password VARCHAR(150) NOT NULL,
@@ -9,19 +9,8 @@ CREATE TABLE user (
     phoneNumber VARCHAR(10) NOT NULL UNIQUE,
     address VARCHAR(100) NOT NULL,
     avatar VARCHAR(255),
-    dateOfBirth DATE NOT NULL
-);
-
-
-CREATE TABLE staff (
-    userId INT PRIMARY KEY,
-    salary FLOAT NOT NULL,
-    FOREIGN KEY (userId) REFERENCES user(id)
-);
-
-CREATE TABLE customer (
-    userId INT PRIMARY KEY,
-    FOREIGN KEY (userId) REFERENCES user(Id)
+    dateOfBirth DATE NOT NULL, 
+    isStaff TINYINT NOT NULL DEFAULT 0
 );
 
 
@@ -48,7 +37,9 @@ CREATE TABLE partner_payment (
     verifyDate DATE,
     detail VARCHAR(255),
     partnerId INT NOT NULL,
-    FOREIGN KEY (partnerId) REFERENCES partner(Id)
+    staffId INT NOT NULL,
+    FOREIGN KEY (partnerId) REFERENCES partner(id),
+    FOREIGN KEY (staffId) REFERENCES user(id)
 );
 
 CREATE TABLE car (
@@ -91,7 +82,7 @@ CREATE TABLE collateral (
     detail VARCHAR(255),
     status ENUM("WAITING EVALUATE", "RECEIVE SUCCESSFULLY", "RETURN SUCCESSFULLY", "SEIZED") NOT NULL,
     customerId INT,
-    FOREIGN KEY (customerId) REFERENCES customer(userId)
+    FOREIGN KEY (customerId) REFERENCES user(id)
 );
 
 CREATE TABLE collateral_image (
@@ -135,8 +126,8 @@ CREATE TABLE rental_order (
     collateralId INT,
     FOREIGN KEY (carId) REFERENCES car(id),
     FOREIGN KEY (brokenReportId) REFERENCES broken_report(id),
-    FOREIGN KEY (staffId) REFERENCES staff(userId),
-    FOREIGN KEY (customerId) REFERENCES customer(userId),
+    FOREIGN KEY (staffId) REFERENCES user(id),
+    FOREIGN KEY (customerId) REFERENCES user(id),
     FOREIGN KEY (collateralId) REFERENCES collateral(id)
 );
 
@@ -150,8 +141,8 @@ CREATE TABLE Bill (
     paymentDate DATE,
     rentalOrderId INT NOT NULL,
     staffId INT NOT NULL,
-    customerUserId INT NOT NULL,
+    customerId INT NOT NULL,
     FOREIGN KEY (rentalOrderId) REFERENCES rental_order(id),
-    FOREIGN KEY (staffId) REFERENCES staff(userId),
-    FOREIGN KEY (customerUserId) REFERENCES customer(userId)
+    FOREIGN KEY (staffId) REFERENCES user(id),
+    FOREIGN KEY (customerId) REFERENCES user(id)
 );

@@ -9,40 +9,42 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
   
-    protected Integer id;
+    private Integer id;
 
     @NotNull(message = "Username không được Null!")
     @Size(min = 5, max = 25, message = "Username phải có từ 5 đến 25 ký tự!")
-    protected String username;
+    private String username;
 
     @NotNull(message = "Password không được Null!")
     @Pattern(
         regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,16}$",
         message = "Mật khẩu phải có 8-16 ký tự, ít nhất 1 chữ hoa, 1 chữ thường, 1 chữ số, 1 ký tự đặc biệt( @, $, !, %, *, ?, &)!"
     )
-    protected String password;
+    private String password;
 
     @NotNull(message = "Tên không được Null!")
     @Size(max = 50, message = "Tên không được quá 50 ký tự!")
-    protected String name;
+    private String name;
 
     @Size(max = 50, message = "Họ không được quá 50 ký tự!")
-    protected String familyName;
+    private String familyName;
 
     @NotNull(message = "Số điện thoại không được Null!")
     @Pattern(regexp = "\\d{10}", message = "Số điện thoại phải có 10 chữ số!")
-    protected String phoneNumber;
+    private String phoneNumber;
 
     @NotNull(message = "Địa chỉ không được Null!")
     @Size(max = 100, message = "Địa chỉ không được quá 100 ký tự!")
-    protected String address;
+    private String address;
 
     @Size(max = 255, message = "Đường dẫn ảnh đại diện không được quá 255 ký tự!")
-    protected String avatar;
+    private String avatar;
 
     @NotNull(message = "Ngày sinh không được Null!")
     @Past(message = "Ngày sinh phải là ngày trong quá khứ!")
-    protected Date dateOfBirth;
+    private Date dateOfBirth;
+    
+    private boolean isStaff;
 
     // Constructor không tham số
     public User() {}
@@ -75,6 +77,9 @@ public class User implements Serializable {
     public Date getDateOfBirth() { return dateOfBirth; }
     public void setDateOfBirth(Date dateOfBirth) { this.dateOfBirth = dateOfBirth; }
 
+    public boolean isIsStaff() { return isStaff; }
+    public void setIsStaff(boolean isStaff) { this.isStaff = isStaff; }
+    
     @Override
     public String toString() {
         return "User{" + "id=" + id + ", username=" + username + ", name=" + name + 

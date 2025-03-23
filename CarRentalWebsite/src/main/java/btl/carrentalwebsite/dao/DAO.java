@@ -15,18 +15,19 @@ public class DAO {
         String PASSWORD = EnvUtil.get("DB_PASSWORD");
         
         if (URL == null || USER == null || PASSWORD == null) {
-            throw new RuntimeException("Không tìm thấy biến môi trường!");
+            System.out.println("⚠ Không tìm thấy biến môi trường!");
         }
         
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             this.connection = DriverManager.getConnection(URL, USER, PASSWORD);
-            System.out.println("Kết nối thành công!");
 
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("MySQL JDBC Driver không tìm thấy!", e);
+            System.out.println("MySQL JDBC Driver không tìm thấy!: " + e);
+            
         } catch (SQLException e) {
-            throw new RuntimeException("Lỗi kết nối database!", e);
+            System.out.println("Lỗi kết nối database!: " + e);
+            
         }
     }
     
@@ -36,8 +37,10 @@ public class DAO {
                 this.connection.close();
                 System.out.println("Kết nối đã đóng!!!!");
             }
+            
         } catch (SQLException e) {
-            throw new RuntimeException("Đã xảy ra lỗi khi đóng Connection!", e);
+            System.out.println("Đã xảy ra lỗi khi đóng Connection!: " + e);
+            
         }
     } 
 }

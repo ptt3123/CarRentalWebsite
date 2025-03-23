@@ -8,4 +8,31 @@
             30
         </session-timeout>
     </session-config>
+    
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/uploads/*</url-pattern>
+    </servlet-mapping>
+
+    
+    <listener>
+        <listener-class>btl.carrentalwebsite.listener.AppContextListener</listener-class>
+    </listener>
+    
+    <context-param>
+        <param-name>DB_URL</param-name>
+        <param-value>jdbc:mysql://localhost:3306/car_rental_db?useSSL=false&amp;serverTimezone=UTC</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>DB_USER</param-name>
+        <param-value>root</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>DB_PASSWORD</param-name>
+        <param-value>taip7547</param-value>
+    </context-param>
+
+    
 </web-app>
