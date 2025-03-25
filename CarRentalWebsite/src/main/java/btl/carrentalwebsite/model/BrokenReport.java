@@ -3,7 +3,7 @@ package btl.carrentalwebsite.model;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 
-class BrokenReport implements Serializable {
+public class BrokenReport implements Serializable {
     
     private static final long serialVersionUID = 1L;
    
@@ -14,7 +14,7 @@ class BrokenReport implements Serializable {
     
     @NotNull(message = "Giá tiền không được Null!")
     @Positive(message = "Giá phải là số dương!")
-    private double price;
+    private float price;
     
     @NotNull(message = "carId không được Null!")
     @Min(value = 1, message = "carId không hợp lệ")
@@ -31,7 +31,7 @@ class BrokenReport implements Serializable {
         return detail;
     }
 
-    public double getPrice() {
+    public float getPrice() {
         return price;
     }
 
@@ -47,7 +47,7 @@ class BrokenReport implements Serializable {
         this.detail = detail;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(float price) {
         this.price = price;
     }
 

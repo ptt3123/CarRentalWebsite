@@ -3,7 +3,7 @@ package btl.carrentalwebsite.model;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 
-class Video implements Serializable {
+public class Video implements Serializable {
     
     private static final long serialVersionUID = 1L;
     

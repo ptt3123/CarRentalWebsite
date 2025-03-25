@@ -4,7 +4,7 @@ import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Date;
 
-class Contract implements Serializable {
+public class Contract implements Serializable {
     
     private static final long serialVersionUID = 1L;
     

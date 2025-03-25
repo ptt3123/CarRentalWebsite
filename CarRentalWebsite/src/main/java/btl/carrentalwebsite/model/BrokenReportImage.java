@@ -3,7 +3,7 @@ package btl.carrentalwebsite.model;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 
-class BrokenReportImage implements Serializable {
+public class BrokenReportImage implements Serializable {
     private static final long serialVersionUID = 1L;
     
     private int id;

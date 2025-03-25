@@ -15,14 +15,14 @@ public class AppContextListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        System.out.println("Ứng dụng đang khởi động ...");
+        System.out.println("Website Is Starting ...");
         
         context = sce.getServletContext();
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        System.out.println("Ứng dụng đang shutdown...");
+        System.out.println("Website Is Shutdown ...");
         
         context = null;
         
@@ -36,7 +36,7 @@ public class AppContextListener implements ServletContextListener {
                 Driver driver = drivers.nextElement();
                 try {
                     DriverManager.deregisterDriver(driver);
-                    System.out.println("Đã gỡ bỏ driver: " + driver);
+                    System.out.println("Driver Removed: " + driver);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }

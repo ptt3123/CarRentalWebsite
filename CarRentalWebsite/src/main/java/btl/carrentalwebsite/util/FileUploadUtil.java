@@ -64,9 +64,10 @@ public class FileUploadUtil {
         try (InputStream fileContent = filePart.getInputStream()) {
             Files.copy(fileContent, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
         }
-        System.out.println("Uploading file: " + fileName);
-        System.out.println("Saving to path: " + file.getAbsolutePath());
-        System.out.println("File size: " + filePart.getSize());
+        
+//        System.out.println("Uploading file: " + fileName);
+//        System.out.println("Saving to path: " + file.getAbsolutePath());
+//        System.out.println("File size: " + filePart.getSize());
 
         return file.getAbsolutePath(); // Trả về đường dẫn đầy đủ
     }

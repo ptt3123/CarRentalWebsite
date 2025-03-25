@@ -4,7 +4,7 @@ import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Date;
 
-class PartnerPayment implements Serializable {
+public class PartnerPayment implements Serializable {
     
     private static final long serialVersionUID = 1L;
     
@@ -26,6 +26,10 @@ class PartnerPayment implements Serializable {
     @Min(value = 1, message = "partnerId không hợp lệ!")
     private int partnerId;
     
+    @NotNull(message = "partnerId không được Null!")
+    @Min(value = 1, message = "partnerId không hợp lệ!")
+    private int staffId;
+    
     public PartnerPayment() {}
     
     // Getters and Setters
@@ -46,7 +50,10 @@ class PartnerPayment implements Serializable {
     
     public int getPartnerId() { return partnerId; }
     public void setPartnerId(int partnerId) { this.partnerId = partnerId; }
-    
+
+    public int getStaffId() { return staffId; }
+    public void setStaffId(int staffId) { this.staffId = staffId; }
+ 
     @Override
     public String toString() {
         return "PartnerPayment{id=" + id + ", price=" + price + ", createDate=" + createDate +

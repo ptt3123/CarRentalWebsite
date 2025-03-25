@@ -15,11 +15,11 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
-import java.sql.SQLException;
 import java.util.Set;
 import btl.carrentalwebsite.model.User;
 import btl.carrentalwebsite.dao.UserDAO;
 import btl.carrentalwebsite.util.FileUploadUtil;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 @WebServlet("/register")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
@@ -36,7 +36,6 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
         request.setCharacterEncoding("UTF-8");
         
         // Lấy dữ liệu
@@ -94,8 +93,7 @@ public class RegisterServlet extends HttpServlet {
         }
         
         // Lưu vào database
-        UserDAO userDAO = new UserDAO();
-        try {
+        try (UserDAO userDAO = new UserDAO();) {
             if(userDAO.create(user)){
                 if(!"0.jpg".equals(avatarPath)){
                     FileUploadUtil.saveUserAVT(filePart, avatarPath);
@@ -105,16 +103,13 @@ public class RegisterServlet extends HttpServlet {
                 
             } 
             
-        } catch (SQLException e) {
+        } catch (SQLIntegrityConstraintViolationException e) {
             request.setAttribute("errorMessage", e.getMessage());
             request.getRequestDispatcher("register.jsp").forward(request, response);
             
         } catch (Exception e){
             request.setAttribute("errorMessage", "Đăng ký thất bại, thử lại!");
             request.getRequestDispatcher("register.jsp").forward(request, response);
-            
-        } finally {
-            userDAO.closeConnection();
         }
     }
 

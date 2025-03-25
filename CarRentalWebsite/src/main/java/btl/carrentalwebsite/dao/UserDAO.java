@@ -9,8 +9,7 @@ import java.sql.ResultSet;
 
 public class UserDAO extends DAO{
     
-    public boolean create(User user) throws Exception{
-        boolean res = false;
+    public boolean create(User user) throws SQLException{
         
         String sql = "INSERT INTO user (username, password, name, familyName, phoneNumber, address, avatar, dateOfBirth) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = this.connection.prepareStatement(sql)) {
@@ -23,11 +22,10 @@ public class UserDAO extends DAO{
             stmt.setString(7, user.getAvatar());
             stmt.setDate(8, new java.sql.Date(user.getDateOfBirth().getTime()));
 
-            if (stmt.executeUpdate() > 0) {
-                res = true;
-            }
+            return stmt.executeUpdate() > 0;
             
         } catch (SQLIntegrityConstraintViolationException e) {
+            System.out.println("SQLIntegrityException: " + e);
             String err = "";
             if(this.isUsernameExists(user.getUsername())){
                 err += "Username, ";
@@ -41,14 +39,12 @@ public class UserDAO extends DAO{
             throw new SQLIntegrityConstraintViolationException(err);
             
         } catch (SQLException e) {
-            System.out.println("Lỗi khi truy vấn CSDL!: " + e);
-            throw new SQLException("Lỗi khi truy vấn CSDL!");
+            System.out.println("Database Error!: " + e);
+            throw new SQLException("Database Error!: " + e);
         } 
-        
-        return res;
     }
     
-    public boolean isUsernameExists(String username) {
+    private boolean isUsernameExists(String username) {
         String sql = "SELECT id FROM user WHERE username = ?";
         try (PreparedStatement stmt = this.connection.prepareStatement(sql)) {
             stmt.setString(1, username);
@@ -56,13 +52,13 @@ public class UserDAO extends DAO{
             return rs.next(); // Nếu có kết quả, username đã tồn tại
             
         } catch (SQLException e) {
-            System.out.println("Lỗi khi truy vấn CSDL!: " + e);
-            return false;
-            
+            System.out.println("Database Error!: " + e);
         }
+        
+        return false;
     }
     
-    public boolean isPhoneNumberExists(String phonenumber) {
+    private boolean isPhoneNumberExists(String phonenumber) {
         String sql = "SELECT id FROM user WHERE phoneNumber = ?";
         try (PreparedStatement stmt = this.connection.prepareStatement(sql)) {
             stmt.setString(1, phonenumber);
@@ -70,10 +66,41 @@ public class UserDAO extends DAO{
             return rs.next(); // Nếu có kết quả, phoneNumber đã tồn tại
             
         } catch (SQLException e) {
-            System.out.println("Lỗi khi truy vấn CSDL!: " + e);
-            return false;
-            
+            System.out.println("Database Error!: " + e);
         }
+        
+        return false;
+    }
+    
+    public User readByUsername(String username) throws SQLException{
+        User user = null;
+        
+        String sql = "SELECT * FROM user WHERE username = ?";
+        
+        try (PreparedStatement stmt = this.connection.prepareStatement(sql)) {
+            
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                user = new User();
+                user.setUsername(rs.getString("username"));
+                user.setPassword(rs.getString("password"));
+                user.setName(rs.getString("name"));
+                user.setFamilyName(rs.getString("familyName"));
+                user.setPhoneNumber(rs.getString("phoneNumber"));
+                user.setAddress(rs.getString("address"));
+                user.setAvatar(rs.getString("avatar"));
+                user.setDateOfBirth(rs.getDate("dateOfBirth"));
+                user.setIsStaff(rs.getBoolean("isStaff"));
+            }
+            
+        } catch (SQLException e) {
+            System.out.println("Database Error!: " + e);
+            throw new SQLException("Database Error!: " + e);
+        }
+        
+        return user;
     }
     
 }

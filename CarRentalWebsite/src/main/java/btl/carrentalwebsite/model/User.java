@@ -16,10 +16,7 @@ public class User implements Serializable {
     private String username;
 
     @NotNull(message = "Password không được Null!")
-    @Pattern(
-        regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,16}$",
-        message = "Mật khẩu phải có 8-16 ký tự, ít nhất 1 chữ hoa, 1 chữ thường, 1 chữ số, 1 ký tự đặc biệt( @, $, !, %, *, ?, &)!"
-    )
+    @Size(min = 8, max = 64, message = "Password phải có từ 8 đến 64 ký tự!")
     private String password;
 
     @NotNull(message = "Tên không được Null!")

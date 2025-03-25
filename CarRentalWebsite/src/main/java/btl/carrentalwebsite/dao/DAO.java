@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 import btl.carrentalwebsite.util.EnvUtil;
 
-public class DAO {
+public class DAO implements AutoCloseable {
     protected Connection connection;
     
     public DAO() {
@@ -15,7 +15,7 @@ public class DAO {
         String PASSWORD = EnvUtil.get("DB_PASSWORD");
         
         if (URL == null || USER == null || PASSWORD == null) {
-            System.out.println("⚠ Không tìm thấy biến môi trường!");
+            System.out.println("Env Variable Not Found!");
         }
         
         try {
@@ -23,23 +23,24 @@ public class DAO {
             this.connection = DriverManager.getConnection(URL, USER, PASSWORD);
 
         } catch (ClassNotFoundException e) {
-            System.out.println("MySQL JDBC Driver không tìm thấy!: " + e);
+            System.out.println("MySQL JDBC Driver Not Found!: " + e);
             
         } catch (SQLException e) {
-            System.out.println("Lỗi kết nối database!: " + e);
+            System.out.println("Connect Database Error!: " + e);
             
         }
     }
     
-    public void closeConnection() {
+    @Override
+    public void close() {
         try {
             if (this.connection != null && !this.connection.isClosed()) {
                 this.connection.close();
-                System.out.println("Kết nối đã đóng!!!!");
+                System.out.println("Connection Closed!!!!");
             }
             
         } catch (SQLException e) {
-            System.out.println("Đã xảy ra lỗi khi đóng Connection!: " + e);
+            System.out.println("Connection Closed Error!: " + e);
             
         }
     } 

@@ -4,7 +4,7 @@ import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Date;
 
-class Collateral implements Serializable {
+public class Collateral implements Serializable {
     
     private static final long serialVersionUID = 1L;
     
@@ -15,7 +15,7 @@ class Collateral implements Serializable {
     private String name;
     
     @Positive(message = "Giá phải là số dương!")
-    private double price;
+    private float price;
     
     @NotNull(message = "Ngày tạo không được Null!")
     private Date createDate;
@@ -41,7 +41,7 @@ class Collateral implements Serializable {
         return name;
     }
 
-    public double getPrice() {
+    public float getPrice() {
         return price;
     }
 
@@ -69,7 +69,7 @@ class Collateral implements Serializable {
         this.name = name;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(float price) {
         this.price = price;
     }
 

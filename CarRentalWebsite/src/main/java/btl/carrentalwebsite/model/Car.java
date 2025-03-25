@@ -46,6 +46,10 @@ public class Car implements Serializable {
     @NotNull(message = "Trạng thái xe không được Null!")
     private CarStatus status;
     
+    @NotNull(message = "contractId không được Null!")
+    @Min(value = 1, message = "contractId không hợp lệ!")
+    private int contractId;
+    
     @NotNull(message = "partnerId không được Null!")
     @Min(value = 1, message = "partnerId không hợp lệ!")
     private int partnerId;
@@ -88,12 +92,14 @@ public class Car implements Serializable {
     
     public int getPartnerId() { return partnerId; }
     public void setPartnerId(int partnerId) { this.partnerId = partnerId; }
-    
+
+    public int getContractId() { return contractId; }
+
+    public void setContractId(int contractId) { this.contractId = contractId; }
+
     @Override
     public String toString() {
-        return "Car{id=" + id + ", name='" + name + '\'' + ", avatar='" + avatar + '\'' + ", brand='" + brand + '\'' +
-                ", type=" + type + ", licensePlate='" + licensePlate + '\'' + ", detail='" + detail + '\'' +
-                ", price=" + price + ", partnerRentalPricePerMonth=" + partnerRentalPricePerMonth + ", rentalPricePerDay=" + rentalPricePerDay +
-                ", status=" + status + ", partnerId=" + partnerId + '}';
+        return "Car{" + "id=" + id + ", name=" + name + ", avatar=" + avatar + ", brand=" + brand + ", type=" + type + ", licensePlate=" + licensePlate + ", detail=" + detail + ", price=" + price + ", partnerRentalPricePerMonth=" + partnerRentalPricePerMonth + ", rentalPricePerDay=" + rentalPricePerDay + ", status=" + status + ", contractId=" + contractId + ", partnerId=" + partnerId + '}';
     }
+    
 }
