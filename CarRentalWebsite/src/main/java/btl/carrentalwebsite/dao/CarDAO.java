@@ -69,4 +69,86 @@ public class CarDAO extends DAO{
         
         return false;
     }
+    
+    public boolean updateCarStatusToOnRenting(int carId) throws Exception{
+        
+        String sql = "UPDATE car SET status = 'ON RENTING' WHERE id = ? AND status = 'FREE'";
+        try (PreparedStatement stmt = this.connection.prepareStatement(sql)) {
+            
+            stmt.setInt(1, carId);
+
+            if (stmt.executeUpdate() > 0){
+                return true;
+                
+            } else {
+                
+                if (isCarIdExists(carId)) {
+                    throw new Exception("Xe đang trong trạng thái không thể thuê!");
+                    
+                } else {
+                    throw new Exception("Xe không tồn tại!");
+                }
+                
+            }
+            
+        } catch (SQLException e) {
+            System.out.println("Database Error: " + e.getMessage());
+            throw new SQLException(e);
+        }
+    }
+    
+    public boolean updateCarStatusToOnRepairing(int carId) throws Exception{
+        
+        String sql = "UPDATE car SET status = 'ON REPAIRING' WHERE id = ? AND status <> 'RETURNED'";
+        try (PreparedStatement stmt = this.connection.prepareStatement(sql)) {
+            
+            stmt.setInt(1, carId);
+
+            if (stmt.executeUpdate() > 0){
+                return true;
+                
+            } else {
+                
+                if (isCarIdExists(carId)) {
+                    throw new Exception("Xe đã được trả về cho đối tác!");
+                    
+                } else {
+                    throw new Exception("Xe không tồn tại!");
+                }
+                
+            }
+            
+        } catch (SQLException e) {
+            System.out.println("Database Error: " + e.getMessage());
+            throw new SQLException(e);
+        }
+    }
+    
+    public boolean updateCarStatusToReturned(int carId) throws Exception{
+        
+        String sql = "UPDATE car SET status = 'RETURNED' WHERE id = ? AND status = 'FREE'";
+        try (PreparedStatement stmt = this.connection.prepareStatement(sql)) {
+            
+            stmt.setInt(1, carId);
+
+            if (stmt.executeUpdate() > 0){
+                return true;
+                
+            } else {
+                
+                if (isCarIdExists(carId)) {
+                    throw new Exception("Xe đag trong trạng thái ko thể hoàn trả!");
+                    
+                } else {
+                    throw new Exception("Xe không tồn tại!");
+                }
+                
+            }
+            
+        } catch (SQLException e) {
+            System.out.println("Database Error: " + e.getMessage());
+            throw new SQLException(e);
+        }
+    }
+
 }

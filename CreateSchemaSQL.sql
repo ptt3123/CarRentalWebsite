@@ -55,7 +55,9 @@ CREATE TABLE car (
     rentalPricePerDay FLOAT NOT NULL,
     status ENUM("FREE", "ON RENTING", "ON REPAIRING", "RETURNED") NOT NULL,
     partnerId INT NOT NULL,
-    FOREIGN KEY (partnerId) REFERENCES partner(id)
+    contractId INT NOT NULL,
+    FOREIGN KEY (partnerId) REFERENCES partner(id),
+    FOREIGN KEY (contractId) REFERENCES contract(id)
 );
 
 CREATE TABLE video (
@@ -135,9 +137,10 @@ CREATE TABLE Bill (
     id INT PRIMARY KEY AUTO_INCREMENT,
     detail VARCHAR(255),
     createDate DATE NOT NULL,
-    totalPrice FLOAT NOT NULL,
+    rentalPrice FLOAT NOT NULL,
     lateFee FLOAT NOT NULL,
     repairFee FLOAT NOT NULL,
+    totalPrice FLOAT NOT NULL,
     paymentDate DATE,
     rentalOrderId INT NOT NULL,
     staffId INT NOT NULL,

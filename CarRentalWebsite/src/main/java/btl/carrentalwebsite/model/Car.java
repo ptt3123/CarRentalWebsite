@@ -54,7 +54,9 @@ public class Car implements Serializable {
     @Min(value = 1, message = "partnerId không hợp lệ!")
     private int partnerId;
     
-    public Car() {}
+    public Car() {
+        this.status = CarStatus.FREE;
+    }
     
     // Getters and Setters
     public int getId() { return id; }

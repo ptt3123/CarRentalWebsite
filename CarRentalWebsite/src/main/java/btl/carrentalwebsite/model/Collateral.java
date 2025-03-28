@@ -30,7 +30,9 @@ public class Collateral implements Serializable {
     @Min(value = 1, message = "customerId không hợp lệ")
     private int customerId;
     
-    public Collateral() {}
+    public Collateral() {
+        this.status = CollateralStatus.WAITING_EVALUATE;
+    }
     
 //    Getters và Setters
     public int getId() {

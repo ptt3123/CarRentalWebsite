@@ -48,7 +48,9 @@ public class RentalOrder implements Serializable {
     @Min(value = 1, message = "collateralId không hợp lệ")
     private Integer collateralId;
     
-    public RentalOrder() {}
+    public RentalOrder() {
+        this.status = RentalOrderStatus.WAITING_VERIFY_ORDER;
+    }
     
 //    Getters and Setters
     public int getId() {

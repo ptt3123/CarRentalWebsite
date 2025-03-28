@@ -6,6 +6,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import btl.carrentalwebsite.model.RentalOrder;
 import java.sql.ResultSet;
 import java.sql.Types;
+import java.sql.Date;
 
 public class RentalOrderDAO extends DAO {
     
@@ -16,9 +17,9 @@ public class RentalOrderDAO extends DAO {
 
         try (PreparedStatement stmt = this.connection.prepareStatement(sql)) {
 
-            stmt.setDate(1, new java.sql.Date(order.getCreateDate().getTime()));
-            stmt.setDate(2, new java.sql.Date(order.getRentalBeginDate().getTime()));
-            stmt.setDate(3, new java.sql.Date(order.getRentalEndDate().getTime()));
+            stmt.setDate(1, new Date(order.getCreateDate().getTime()));
+            stmt.setDate(2, new Date(order.getRentalBeginDate().getTime()));
+            stmt.setDate(3, new Date(order.getRentalEndDate().getTime()));
             stmt.setDouble(4, order.getPrice());
             stmt.setString(5, order.getStatus().toString());
             stmt.setInt(6, order.getCarId());

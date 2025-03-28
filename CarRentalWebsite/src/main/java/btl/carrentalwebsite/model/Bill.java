@@ -18,6 +18,10 @@ public class Bill implements Serializable {
     
     @NotNull(message = "Tổng giá tiền không được Null!")
     @Positive(message = "Tổng giá tiền phải dương!")
+    private float rentalPrice;
+    
+    @NotNull(message = "Tổng giá tiền không được Null!")
+    @Positive(message = "Tổng giá tiền phải dương!")
     private float totalPrice;
     
     @NotNull(message = "Phí trả xe trễ không được Null!")
@@ -124,9 +128,26 @@ public class Bill implements Serializable {
     public void setCustomerUserId(int customerId) {
         this.customerId = customerId;
     }
-    
+
+    public float getRentalPrice() {
+        return rentalPrice;
+    }
+
+    public void setRentalPrice(float rentalPrice) {
+        this.rentalPrice = rentalPrice;
+    }
+
+    public int getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
+    }
+
     @Override
     public String toString() {
-        return "Bill{" + "id=" + id + ", detail=" + detail + ", createDate=" + createDate + ", totalPrice=" + totalPrice + ", lateFee=" + lateFee + ", repairFee=" + repairFee + ", paymentDate=" + paymentDate + ", rentalOrderId=" + rentalOrderId + ", staffId=" + staffId + ", customerId=" + customerId + '}';
+        return "Bill{" + "id=" + id + ", detail=" + detail + ", createDate=" + createDate + ", rentalPrice=" + rentalPrice + ", totalPrice=" + totalPrice + ", lateFee=" + lateFee + ", repairFee=" + repairFee + ", paymentDate=" + paymentDate + ", rentalOrderId=" + rentalOrderId + ", staffId=" + staffId + ", customerId=" + customerId + '}';
     }
+    
 }

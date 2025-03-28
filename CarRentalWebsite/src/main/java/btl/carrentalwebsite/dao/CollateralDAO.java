@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.ResultSet;
-import java.util.Date;
 import btl.carrentalwebsite.model.Collateral;
 
 public class CollateralDAO extends DAO {
