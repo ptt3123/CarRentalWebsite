@@ -4,7 +4,11 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import btl.carrentalwebsite.model.Car;
+import btl.carrentalwebsite.model.CarStatus;
+import btl.carrentalwebsite.model.CarType;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CarDAO extends DAO{
     
@@ -149,6 +153,124 @@ public class CarDAO extends DAO{
             System.out.println("Database Error: " + e.getMessage());
             throw new SQLException(e);
         }
+    }
+    
+    // Đọc tất cả xe (có phân trang)
+    public List<Car> readAllCar(int page, int pageSize) throws SQLException{
+        List<Car> cars = new ArrayList<>();
+        String sql = "SELECT * FROM car LIMIT ? OFFSET ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, pageSize);
+            stmt.setInt(2, (page - 1) * pageSize);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                cars.add(mapResultSetToCar(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Database Error: " + e.getMessage());
+            throw new SQLException(e);
+        }
+        return cars;
+    }
+
+    // Đọc tất cả xe có status = 'FREE' (có phân trang)
+    public List<Car> readAllFreeCar(int page, int pageSize) throws SQLException{
+        List<Car> cars = new ArrayList<>();
+        String sql = "SELECT * FROM car WHERE status = 'FREE' LIMIT ? OFFSET ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, pageSize);
+            stmt.setInt(2, (page - 1) * pageSize);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                cars.add(mapResultSetToCar(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Database Error: " + e.getMessage());
+            throw new SQLException(e);
+        }
+        return cars;
+    }
+    
+    public Car readCarById(int carId) throws SQLException{
+        String sql = "SELECT * FROM car WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setInt(1, carId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return mapResultSetToCar(rs);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Database Error: " + e.getMessage());
+            throw new SQLException(e);
+        }
+        return null;
+    }
+    
+    public boolean update(Car car) throws SQLException{
+        String sql = "UPDATE car SET name = ?, avatar = ?, brand = ?, type = ?, licensePlate = ?, " +
+                     "detail = ?, price = ?, partnerRentalPricePerMonth = ?, rentalPricePerDay = ?, " +
+                     "status = ? WHERE id = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setString(1, car.getName());
+            stmt.setString(2, car.getAvatar());
+            stmt.setString(3, car.getBrand());
+            stmt.setString(4, car.getType().toString());
+            stmt.setString(5, car.getLicensePlate());
+            stmt.setString(6, car.getDetail());
+            stmt.setFloat(7, car.getPrice());
+            stmt.setFloat(8, car.getPartnerRentalPricePerMonth());
+            stmt.setFloat(9, car.getRentalPricePerDay());
+            stmt.setString(10, car.getStatus().toString());
+            stmt.setInt(11, car.getId());
+
+            return stmt.executeUpdate() > 0;
+            
+        } catch (SQLException e) {
+            System.out.println("Database Error: " + e.getMessage());
+            throw new SQLException(e);
+        }
+    }
+
+    public boolean deleteCar(int carId) throws SQLException{
+        String sql = "DELETE FROM car WHERE id = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, carId);
+            
+            return stmt.executeUpdate() > 0;
+            
+        } catch (SQLException e) {
+            System.out.println("Database Error: " + e.getMessage());
+            throw new SQLException(e);
+        }
+    }
+
+    // Hàm chuyển ResultSet thành Car Object
+    private Car mapResultSetToCar(ResultSet rs) throws SQLException {
+        Car car = new Car();
+        car.setId(rs.getInt("id"));
+        car.setName(rs.getString("name"));
+        car.setAvatar(rs.getString("avatar"));
+        car.setBrand(rs.getString("brand"));
+        car.setType(CarType.valueOf(rs.getString("type")));
+        car.setLicensePlate(rs.getString("licensePlate"));
+        car.setDetail(rs.getString("detail"));
+        car.setPrice(rs.getFloat("price"));
+        car.setPartnerRentalPricePerMonth(rs.getFloat("partnerRentalPricePerMonth"));
+        car.setRentalPricePerDay(rs.getFloat("rentalPricePerDay"));
+        car.setStatus(CarStatus.valueOf(rs.getString("status")));
+        car.setPartnerId(rs.getInt("partnerId"));
+        car.setContractId(rs.getInt("contractId"));
+        return car;
     }
 
 }

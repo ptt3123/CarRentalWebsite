@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDAO extends DAO{
     
@@ -103,4 +105,83 @@ public class UserDAO extends DAO{
         return user;
     }
     
+    public List<User> readAllCustomers(int page, int pageSize) throws SQLException{
+        List<User> customers = new ArrayList<>();
+        String sql = "SELECT * FROM user WHERE isStaff = 0 LIMIT ? OFFSET ?";
+
+        try (PreparedStatement stmt = this.connection.prepareStatement(sql)) {
+            stmt.setInt(1, pageSize);
+            stmt.setInt(2, (page - 1) * pageSize);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    customers.add(mapUser(rs));
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Database Error!: " + e);
+            throw new SQLException("Database Error!: " + e);
+        }
+        return customers;
+    }
+    
+    public List<User> readAllStaff(int page, int pageSize) throws SQLException{
+        List<User> staffList = new ArrayList<>();
+        String sql = "SELECT * FROM user WHERE isStaff = 1 LIMIT ? OFFSET ?";
+
+        try (PreparedStatement stmt = this.connection.prepareStatement(sql)) {
+            stmt.setInt(1, pageSize);
+            stmt.setInt(2, (page - 1) * pageSize);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    staffList.add(mapUser(rs));
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Database Error!: " + e);
+            throw new SQLException("Database Error!: " + e);
+        }
+        return staffList;
+    }
+    
+    // Chuyển ResultSet thành User
+    private User mapUser(ResultSet rs) throws SQLException {
+        User user = new User();
+        user.setId(rs.getInt("id"));
+        user.setUsername(rs.getString("username"));
+        user.setName(rs.getString("name"));
+        user.setFamilyName(rs.getString("familyName"));
+        user.setPhoneNumber(rs.getString("phoneNumber"));
+        user.setAddress(rs.getString("address"));
+        user.setAvatar(rs.getString("avatar"));
+        user.setDateOfBirth(rs.getDate("dateOfBirth"));
+        return user;
+    }
+    
+    // Đếm tổng số khách hàng
+    public int readNumberOfCustomer() throws SQLException{
+        return getTotalUsersByType(false);
+    }
+
+    // Đếm tổng số nhân viên
+    public int getNumberOfStaff() throws SQLException{
+        return getTotalUsersByType(true);
+    }
+
+    // Hàm chung đếm số lượng user theo isStaff
+    private int getTotalUsersByType(boolean isStaff) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM user WHERE isStaff = ?";
+        try (PreparedStatement stmt = this.connection.prepareStatement(sql)) {
+            stmt.setBoolean(1, isStaff);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                } else {
+                    return 0;
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Database Error!: " + e);
+            throw new SQLException("Database Error!: " + e);
+        }
+    }
 }

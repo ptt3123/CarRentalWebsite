@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.sql.SQLException;
 import btl.carrentalwebsite.dao.UserDAO;
 import btl.carrentalwebsite.model.User;
 import btl.carrentalwebsite.util.PasswordUtil;
@@ -49,15 +48,16 @@ public class LoginServlet extends HttpServlet {
                 // Lưu thông tin 
                 HttpSession session = request.getSession();
                 session.setAttribute("uid", user.getId());
-                session.setAttribute("ist", user.isIsStaff());
+                boolean ist = user.isIsStaff();
+                session.setAttribute("ist", ist);
 
                 // Chuyển hướng đến trang chủ hoặc trang dashboard
-                response.sendRedirect("index.jsp");
+                if (!ist) {
+                    response.sendRedirect("index.jsp");
+                } else {
+                    response.sendRedirect("dashboard.jsp");
+                }
             }
-            
-        } catch (SQLException e) {
-            request.setAttribute("errorMessage", "Đã có lỗi xảy ra. Hãy thử lại sau!");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
             
         } catch (Exception e) {
             request.setAttribute("errorMessage", "Đã có lỗi xảy ra. Hãy thử lại sau!");

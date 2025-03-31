@@ -20,6 +20,7 @@ import btl.carrentalwebsite.model.User;
 import btl.carrentalwebsite.dao.UserDAO;
 import btl.carrentalwebsite.util.FileUploadUtil;
 import java.sql.SQLIntegrityConstraintViolationException;
+import btl.carrentalwebsite.util.UploadPath;
 
 @WebServlet("/register")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
@@ -96,7 +97,7 @@ public class RegisterServlet extends HttpServlet {
         try (UserDAO userDAO = new UserDAO();) {
             if(userDAO.create(user)){
                 if(!"0.jpg".equals(avatarPath)){
-                    FileUploadUtil.saveUserAVT(filePart, avatarPath);
+                    FileUploadUtil.saveFile(filePart, avatarPath, UploadPath.USER_AVT_DIR.getPath());
                 }
                 
                 response.sendRedirect("login.jsp"); // Chuyển đến trang đăng nhập

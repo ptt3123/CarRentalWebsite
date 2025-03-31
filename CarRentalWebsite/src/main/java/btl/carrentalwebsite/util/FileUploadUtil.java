@@ -10,39 +10,7 @@ import jakarta.servlet.http.Part;
 
 public class FileUploadUtil {
     
-    private static final String UPLOAD_DIR = "D:\\MyProjects\\Java\\CarRentalWebsite\\uploads\\";
-    private static final String BROKEN_REPORT_IMG_DIR = "Broken-Report-IMG\\";
-    private static final String CAR_AVT_DIR = "Car-AVT\\";
-    private static final String CAR_IMG_DIR = "Car-IMG\\";
-    private static final String CAR_VID_DIR = "Car-VID\\";
-    private static final String COLLATERAL_IMG_DIR = "Collateral-IMG\\";
-    private static final String USER_AVT_DIR = "User-AVT\\";
-    
-    public static String saveBrokenReportIMG(Part filePart, String fileName) throws Exception {
-        return saveFile(filePart, fileName, BROKEN_REPORT_IMG_DIR);
-    }
-    
-    public static String saveCarAVT(Part filePart, String fileName) throws Exception {
-        return saveFile(filePart, fileName, CAR_AVT_DIR);
-    }
-    
-    public static String saveCarIMG(Part filePart, String fileName) throws Exception {
-        return saveFile(filePart, fileName, CAR_IMG_DIR);
-    }
-    
-    public static String saveCarVID(Part filePart, String fileName) throws Exception {
-        return saveFile(filePart, fileName, CAR_VID_DIR);
-    }
-    
-    public static String saveCollateralIMG(Part filePart, String fileName) throws Exception {
-        return saveFile(filePart, fileName, COLLATERAL_IMG_DIR);
-    }
-    
-    public static String saveUserAVT(Part filePart, String fileName) throws Exception {
-        return saveFile(filePart, fileName, USER_AVT_DIR);
-    }
-   
-    private static String saveFile(Part filePart, String fileName, String subDir) 
+    public static String saveFile(Part filePart, String fileName, String subDir) 
             throws Exception {
         
         if (filePart == null || filePart.getSize() == 0) {
@@ -50,7 +18,7 @@ public class FileUploadUtil {
         }
 
         // Lấy thư mục uploads 
-        String uploadPath = new File(UPLOAD_DIR + subDir).getAbsolutePath();
+        String uploadPath = new File(UploadPath.UPLOAD_DIR.getPath() + subDir).getAbsolutePath();
         File uploadFolder = new File(uploadPath);
         
         // Kiểm tra và tạo thư mục nếu chưa tồn tại
@@ -77,7 +45,7 @@ public class FileUploadUtil {
             return false;
         }
 
-        Path filePath = Paths.get(UPLOAD_DIR, subDir, fileName);
+        Path filePath = Paths.get(UploadPath.UPLOAD_DIR.getPath(), subDir, fileName);
         File file = filePath.toFile();
 
         if (file.exists()) {
