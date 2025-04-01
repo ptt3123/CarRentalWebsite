@@ -4,7 +4,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import btl.carrentalwebsite.model.Contract;
+import btl.carrentalwebsite.model.ContractStatus;
 
 public class ContractDAO extends DAO {
     
@@ -84,5 +87,52 @@ public class ContractDAO extends DAO {
         }
         
         return false;
+    }
+    
+    public List<Contract> readListByPartnerIdOrderByCreateDate(int partnerId, int page, int pageSize) throws SQLException {
+        List<Contract> contracts = new ArrayList<>();
+        String sql = "SELECT * FROM contract WHERE partnerId = ? ORDER BY createDate DESC LIMIT ? OFFSET ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, partnerId);
+            stmt.setInt(2, pageSize);
+            stmt.setInt(3, (page - 1) * pageSize);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                contracts.add(mapResultSetToContract(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Database Error: " + e.getMessage());
+            throw new SQLException(e);
+        }
+        return contracts;
+    }
+    
+    public Contract read(int contractId) throws SQLException {
+        String sql = "SELECT * FROM contract WHERE id = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, contractId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return mapResultSetToContract(rs);
+            }
+        } catch (SQLException e) {
+            System.out.println("Database Error: " + e.getMessage());
+            throw new SQLException(e);
+        }
+        return null;
+    }
+
+    private Contract mapResultSetToContract(ResultSet rs) throws SQLException {
+        Contract contract = new Contract();
+        contract.setId(rs.getInt("id"));
+        contract.setDetail(rs.getString("detail"));
+        contract.setCreateDate(rs.getDate("createDate"));
+        contract.setStatus(ContractStatus.valueOf(rs.getString("status")));
+        contract.setPartnerId(rs.getInt("partnerId"));
+        return contract;
     }
 }

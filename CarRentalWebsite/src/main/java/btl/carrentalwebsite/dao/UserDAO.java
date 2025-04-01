@@ -157,18 +157,8 @@ public class UserDAO extends DAO{
         return user;
     }
     
-    // Đếm tổng số khách hàng
-    public int readNumberOfCustomer() throws SQLException{
-        return getTotalUsersByType(false);
-    }
-
-    // Đếm tổng số nhân viên
-    public int getNumberOfStaff() throws SQLException{
-        return getTotalUsersByType(true);
-    }
-
     // Hàm chung đếm số lượng user theo isStaff
-    private int getTotalUsersByType(boolean isStaff) throws SQLException {
+    public int getTotalUsersByType(boolean isStaff) throws SQLException {
         String sql = "SELECT COUNT(*) FROM user WHERE isStaff = ?";
         try (PreparedStatement stmt = this.connection.prepareStatement(sql)) {
             stmt.setBoolean(1, isStaff);

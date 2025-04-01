@@ -4,6 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.ResultSet;
+import java.util.List;
+import java.util.ArrayList;
 import btl.carrentalwebsite.model.Video;
 
 public class VideoDAO extends DAO {
@@ -27,6 +29,34 @@ public class VideoDAO extends DAO {
             throw new SQLException(e);
             
         }
+    }
+    public List<Video> readVideosByCarId(int carId, int page, int pageSize) throws SQLException {
+        List<Video> videos = new ArrayList<>();
+        String sql = "SELECT * FROM video WHERE carId = ? LIMIT ? OFFSET ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, carId);
+            stmt.setInt(2, pageSize);
+            stmt.setInt(3, (page - 1) * pageSize);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                videos.add(mapResultSetToVideo(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Database Error: " + e.getMessage());
+            throw new SQLException(e);
+        }
+        return videos;
+    }
+
+    private Video mapResultSetToVideo(ResultSet rs) throws SQLException {
+        Video video = new Video();
+        video.setId(rs.getInt("id"));
+        video.setLink(rs.getString("link"));
+        video.setDetail(rs.getString("detail"));
+        video.setCarId(rs.getInt("carId"));
+        return video;
     }
     
 }

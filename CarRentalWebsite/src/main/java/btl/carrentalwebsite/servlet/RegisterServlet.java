@@ -9,7 +9,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.Part;
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.UUID;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -50,8 +49,7 @@ public class RegisterServlet extends HttpServlet {
         Part filePart = request.getPart("avatar");
         
         // Convert ngày sinh
-        LocalDate dateOfBirth = LocalDate.parse(dateOfBirthStr);
-        Date sqlDate = Date.valueOf(dateOfBirth);
+        Date sqlDate = Date.valueOf(dateOfBirthStr);
         
         // Tạo link cho avatar
         String avatarPath = "0.jpg";

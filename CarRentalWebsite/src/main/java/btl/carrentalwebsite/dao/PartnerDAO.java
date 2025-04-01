@@ -55,11 +55,7 @@ public class PartnerDAO extends DAO{
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    Partner partner = new Partner();
-                    partner.setId(rs.getInt("id"));
-                    partner.setName(rs.getString("name"));
-                    partner.setDetail(rs.getString("detail"));
-                    partners.add(partner);
+                    partners.add(mapResultSetToPartner(rs));
                 }
             }
         } catch (SQLException e) {
@@ -87,18 +83,29 @@ public class PartnerDAO extends DAO{
         }
     }
     
-    public boolean delete(int partnerId) throws SQLException{
-        String sql = "DELETE FROM partner WHERE id = ?";
+    public Partner read(int id) throws SQLException {
+        String sql = "SELECT * FROM partner WHERE id = ?";
 
-        try (PreparedStatement stmt = this.connection.prepareStatement(sql)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
 
-            stmt.setInt(1, partnerId);
-            return stmt.executeUpdate() > 0;
-            
+            if (rs.next()) {
+                return mapResultSetToPartner(rs);
+            }
         } catch (SQLException e) {
-            System.out.println("Database Error!: " + e);
+            System.out.println("Database Error: " + e.getMessage());
             throw new SQLException(e);
         }
+        return null;
     }
     
+    private Partner mapResultSetToPartner(ResultSet rs) throws SQLException {
+        Partner partner = new Partner();
+        partner.setId(rs.getInt("id"));
+        partner.setName(rs.getString("name"));
+        partner.setDetail(rs.getString("detail"));
+        return partner;
+    }
+
 }

@@ -175,14 +175,14 @@ public class CarDAO extends DAO{
         return cars;
     }
 
-    // Đọc tất cả xe có status = 'FREE' (có phân trang)
-    public List<Car> readAllFreeCar(int page, int pageSize) throws SQLException{
+    public List<Car> readByStatus(String status, int page, int pageSize) throws SQLException {
         List<Car> cars = new ArrayList<>();
-        String sql = "SELECT * FROM car WHERE status = 'FREE' LIMIT ? OFFSET ?";
+        String sql = "SELECT * FROM car WHERE status = ? LIMIT ? OFFSET ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, pageSize);
-            stmt.setInt(2, (page - 1) * pageSize);
+            stmt.setString(1, status);
+            stmt.setInt(2, pageSize);
+            stmt.setInt(3, (page - 1) * pageSize);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
@@ -195,7 +195,7 @@ public class CarDAO extends DAO{
         return cars;
     }
     
-    public Car readCarById(int carId) throws SQLException{
+    public Car read(int carId) throws SQLException{
         String sql = "SELECT * FROM car WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
 
@@ -232,20 +232,6 @@ public class CarDAO extends DAO{
             stmt.setString(10, car.getStatus().toString());
             stmt.setInt(11, car.getId());
 
-            return stmt.executeUpdate() > 0;
-            
-        } catch (SQLException e) {
-            System.out.println("Database Error: " + e.getMessage());
-            throw new SQLException(e);
-        }
-    }
-
-    public boolean deleteCar(int carId) throws SQLException{
-        String sql = "DELETE FROM car WHERE id = ?";
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, carId);
-            
             return stmt.executeUpdate() > 0;
             
         } catch (SQLException e) {

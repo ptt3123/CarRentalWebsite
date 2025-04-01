@@ -7,10 +7,12 @@ import btl.carrentalwebsite.model.Bill;
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.sql.Date;
+import java.util.List;
+import java.util.ArrayList;
 
 public class BillDAO extends DAO {
     
-    public boolean createBill(Bill bill) throws SQLException {
+    public boolean create(Bill bill) throws SQLException {
         String sql = "INSERT INTO Bill (detail, createDate, rentalPrice, lateFee, repairFee, totalPrice, paymentDate, rentalOrderId, staffId, customerId) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -84,6 +86,89 @@ public class BillDAO extends DAO {
         }
         
         return false;
+    }
+    
+    public Bill read(int id) throws SQLException{
+        String sql = "SELECT * FROM Bill WHERE id = ?";
+        
+        try (PreparedStatement stmt = this.connection.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return mapResultSetToBill(rs);
+            }
+            
+        } catch (SQLException e) {
+            System.out.println("Database Error: " + e.getMessage());
+            throw new SQLException(e);
+        }
+        return null;
+    }
+    
+    public List<Bill> readAllBills(int page, int pageSize) throws SQLException {
+        List<Bill> bills = new ArrayList<>();
+        String sql = "SELECT * FROM Bill ORDER BY (paymentDate IS NOT NULL), createDate DESC LIMIT ? OFFSET ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, pageSize);
+            stmt.setInt(2, (page - 1) * pageSize);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                bills.add(mapResultSetToBill(rs));
+            }
+            
+        } catch (SQLException e) {
+            System.out.println("Database Error: " + e.getMessage());
+            throw new SQLException(e);
+        }
+        return bills;
+    }
+
+    public List<Bill> readBillsByCustomerId(int customerId, int page, int pageSize) throws SQLException {
+        List<Bill> bills = new ArrayList<>();
+        String sql = "SELECT * FROM Bill WHERE customerId = ? ORDER BY (paymentDate IS NOT NULL), createDate DESC LIMIT ? OFFSET ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, customerId);
+            stmt.setInt(2, pageSize);
+            stmt.setInt(3, (page - 1) * pageSize);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                bills.add(mapResultSetToBill(rs));
+            }
+            
+        } catch (SQLException e) {
+            System.out.println("Database Error: " + e.getMessage());
+            throw new SQLException(e);
+        }
+        
+        return bills;
+    }
+    
+    private Bill mapResultSetToBill(ResultSet rs) throws SQLException {
+        Bill bill = new Bill();
+        bill.setId(rs.getInt("id"));
+        bill.setDetail(rs.getString("detail"));
+        bill.setCreateDate(rs.getDate("createDate"));
+        bill.setRentalPrice(rs.getFloat("rentalPrice"));
+        bill.setLateFee(rs.getFloat("lateFee"));
+        bill.setRepairFee(rs.getFloat("repairFee"));
+        bill.setTotalPrice(rs.getFloat("totalPrice"));
+
+        Date paymentDate = rs.getDate("paymentDate");
+        if (paymentDate != null) {
+            bill.setPaymentDate(paymentDate);
+        }
+
+        bill.setRentalOrderId(rs.getInt("rentalOrderId"));
+        bill.setStaffId(rs.getInt("staffId"));
+        bill.setCustomerId(rs.getInt("customerId"));
+
+        return bill;
     }
 
 }
