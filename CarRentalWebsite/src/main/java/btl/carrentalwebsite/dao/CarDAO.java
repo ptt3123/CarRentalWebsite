@@ -28,7 +28,7 @@ public class CarDAO extends DAO{
             stmt.setFloat(9, car.getRentalPricePerDay());
             stmt.setString(10, car.getStatus().toString());
             stmt.setInt(11, car.getPartnerId());
-            stmt.setInt(11, car.getContractId());
+            stmt.setInt(12, car.getContractId());
 
             return stmt.executeUpdate() > 0;
             

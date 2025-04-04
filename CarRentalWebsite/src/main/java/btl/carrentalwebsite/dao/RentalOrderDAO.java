@@ -27,10 +27,10 @@ public class RentalOrderDAO extends DAO {
             stmt.setString(5, order.getStatus().toString());
             stmt.setInt(6, order.getCarId());
 
-            // Nếu `brokenReportId` hoặc `collateralId` là null, set thành NULL trong SQL
-            int brokenReportId = order.getBrokenReportId();
-            if (brokenReportId != 0) {
-                stmt.setInt(7, brokenReportId);
+            
+       
+            if (order.getBrokenReportId() != null) {
+                stmt.setInt(7, order.getBrokenReportId());
             } else {
                 stmt.setNull(7, Types.INTEGER);
             }
@@ -38,9 +38,8 @@ public class RentalOrderDAO extends DAO {
             stmt.setInt(8, order.getStaffId());
             stmt.setInt(9, order.getCustomerId());
             
-            int collateralId = order.getCollateralId();
-            if (collateralId != 0) {
-                stmt.setInt(10, collateralId);
+            if (order.getCollateralId() != null) {
+                stmt.setInt(10, order.getCollateralId());
             } else {
                 stmt.setNull(10, Types.INTEGER);
             }
